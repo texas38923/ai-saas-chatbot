@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
 import User from '../models/User.js';
 import { hash, compare } from 'bcrypt';
+import { createToken } from '../utils/token-manager.js';
+import { COOKIE_NAME } from '../utils/constants.js';
 
 export const getAllUsers = async (
   req: Request,
@@ -34,8 +36,35 @@ export const userSignup = async (
     const hashedPassword = await hash(password, 10);
     const user = new User({ name, email, password: hashedPassword });
 
-    //save and return:
+    //save the user details:
     await user.save();
+
+    //creating token for the user session , and storing cookie:
+
+    //clearing the previous session cookies of user:
+    res.clearCookie(COOKIE_NAME, {
+      httpOnly: true,
+      domain: 'localhost',
+      signed: true,
+      path: '/',
+    });
+
+    //jwt tokens and http only cookies for auth process:
+    const token = createToken(user._id.toString(), user.email, '7d');
+
+    //date string for expiring in 7 days:
+    const expires = new Date();
+    expires.setDate(expires.getDate() + 7);
+
+    //sending the cookie from backend to the frontend:
+    res.cookie(COOKIE_NAME, token, {
+      path: '/',
+      domain: 'localhost',
+      expires,
+      httpOnly: true,
+      signed: true,
+    });
+
     return res.status(201).json({ message: 'OK', id: user._id.toString() });
   } catch (error) {
     console.log(error);
@@ -63,6 +92,30 @@ export const userLogin = async (
     if (!isPasswordCorrect) {
       return res.status(403).send('Incorrect Password!');
     }
+
+    //clearing the previous session cookies of user:
+    res.clearCookie(COOKIE_NAME, {
+      httpOnly: true,
+      domain: 'localhost',
+      signed: true,
+      path: '/',
+    });
+
+    //jwt tokens and http only cookies for auth process:
+    const token = createToken(user._id.toString(), user.email, '7d');
+
+    //date string for expiring in 7 days:
+    const expires = new Date();
+    expires.setDate(expires.getDate() + 7);
+
+    //sending the cookie from backend to the frontend:
+    res.cookie(COOKIE_NAME, token, {
+      path: '/',
+      domain: 'localhost',
+      expires,
+      httpOnly: true,
+      signed: true,
+    });
 
     return res.status(200).json({ message: 'OK', id: user._id.toString() });
   } catch (error) {

@@ -6,6 +6,17 @@ import { createTheme, ThemeProvider } from '@mui/material';
 import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext.tsx';
 
+//to show users notifications on the website:
+import { Toaster } from 'react-hot-toast';
+
+//for frontend<->backend communication:
+import axios from 'axios';
+
+//to make api requests from the frontend to the backend:
+axios.defaults.baseURL = 'http://localhost:5000/api/v1';
+axios.defaults.withCredentials = true; //to exchange cookies;
+
+//theme to be used throughout:
 const theme = createTheme({
   typography: {
     fontFamily: 'Roboto Slab , serif',
@@ -18,6 +29,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <AuthProvider>
       <BrowserRouter>
         <ThemeProvider theme={theme}>
+          <Toaster position='top-right' />
           <App />
         </ThemeProvider>
       </BrowserRouter>

@@ -18,7 +18,7 @@ export const verifyToken = async (req, res, next) => {
             }
             else {
                 resolve();
-                res.locals.jstDaat = success;
+                res.locals.jwtData = success;
                 return next();
             }
         });

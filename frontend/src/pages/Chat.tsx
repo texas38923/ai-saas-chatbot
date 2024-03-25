@@ -1,6 +1,86 @@
-import { Avatar, Box, Button, Typography } from '@mui/material';
+import { Avatar, Box, Button, IconButton, Typography } from '@mui/material';
 import { useAuth } from '../context/AuthContext';
 import { red } from '@mui/material/colors';
+import ChatItem from '../components/chat/ChatItem';
+import { IoMdSend } from 'react-icons/io';
+
+const chatMessages = [
+  {
+    role: 'User',
+    content: 'Hi there! How can I assist you today?',
+  },
+  {
+    role: 'Assistant',
+    content: "Hello! I'm here to help. What do you need assistance with?",
+  },
+  {
+    role: 'User',
+    content:
+      "I'm having trouble setting up my email account. Can you guide me through the process?",
+  },
+  {
+    role: 'Assistant',
+    content:
+      "Of course! Could you please provide me with the email service provider you're using?",
+  },
+  {
+    role: 'User',
+    content: "I'm using Gmail.",
+  },
+  {
+    role: 'Assistant',
+    content:
+      "Great! Let's start by opening your web browser and navigating to the Gmail website.",
+  },
+  {
+    role: 'Assistant',
+    content: "Once you're there, click on the 'Sign in' button.",
+  },
+  {
+    role: 'User',
+    content: "Got it. I'm signed in now.",
+  },
+  {
+    role: 'Assistant',
+    content:
+      "Perfect! Now let's go to Settings by clicking on the gear icon located in the top right corner.",
+  },
+  {
+    role: 'Assistant',
+    content: "From the Settings menu, select 'See all settings'.",
+  },
+  {
+    role: 'User',
+    content: "Okay, I'm on the Settings page.",
+  },
+  {
+    role: 'Assistant',
+    content: "Now, navigate to the 'Accounts and Import' tab.",
+  },
+  {
+    role: 'Assistant',
+    content:
+      "Under 'Check mail from other accounts', click on 'Add a mail account'.",
+  },
+  {
+    role: 'User',
+    content: 'I see it. What do I do next?',
+  },
+  {
+    role: 'Assistant',
+    content:
+      "Enter the email address you want to add and click 'Next'. Follow the prompts to complete the setup.",
+  },
+  {
+    role: 'User',
+    content: 'Thank you so much for your help!',
+  },
+  {
+    role: 'Assistant',
+    content:
+      "You're welcome! If you have any more questions, feel free to ask.",
+  },
+];
 
 const Chat = () => {
   const auth = useAuth();
@@ -114,7 +194,39 @@ const Chat = () => {
             scrollBehavior: 'smooth',
             overflowY: 'auto',
           }}
-        ></Box>
+        >
+          {chatMessages.map((chat, index) => (
+            <ChatItem content={chat.content} role={chat.role} key={index} />
+          ))}
+        </Box>
+
+        <div
+          style={{
+            width: '100%',
+            padding: '20px',
+            borderRadius: 8,
+            backgroundColor: 'rgb(17,27,39)',
+            display: 'flex',
+            margin: 'auto',
+          }}
+        >
+          {' '}
+          <input
+            type='text'
+            style={{
+              width: '100%',
+              backgroundColor: 'transparent',
+              padding: '10px',
+              border: 'none',
+              outline: 'none',
+              color: 'white',
+              fontSize: '20px',
+            }}
+          />
+          <IconButton sx={{ ml: 'auto', color: 'white' }}>
+            <IoMdSend />
+          </IconButton>
+        </div>
       </Box>
     </Box>
   );

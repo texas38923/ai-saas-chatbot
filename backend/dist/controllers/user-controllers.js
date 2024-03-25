@@ -121,4 +121,33 @@ export const verifyUser = async (req, res, next) => {
         return res.status(200).json({ message: 'ERROR', cause: error.message });
     }
 };
+export const userLogout = async (req, res, next) => {
+    try {
+        //get the user from local variables:
+        const user = await User.findById(res.locals.jwtData.id);
+        if (!user) {
+            return res
+                .status(401)
+                .send('User not registered or Token Malfunctioned..');
+        }
+        //user token check:
+        if (user._id.toString() !== res.locals.jwtData.id) {
+            return res.status(401).send("Credentials didn't match..");
+        }
+        //clear the user cookie to logout:
+        res.clearCookie(COOKIE_NAME, {
+            httpOnly: true,
+            domain: 'localhost',
+            signed: true,
+            path: '/',
+        });
+        return res
+            .status(200)
+            .json({ message: 'OK', name: user.name, email: user.email });
+    }
+    catch (error) {
+        console.log(error);
+        return res.status(200).json({ message: 'ERROR', cause: error.message });
+    }
+};
 //# sourceMappingURL=user-controllers.js.map

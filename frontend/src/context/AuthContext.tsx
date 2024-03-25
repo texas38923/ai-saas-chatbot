@@ -5,7 +5,11 @@ import {
   useEffect,
   useContext,
 } from 'react';
-import { checkAuthStatus, loginUser } from '../helpers/api-communicator';
+import {
+  checkAuthStatus,
+  loginUser,
+  logoutUser,
+} from '../helpers/api-communicator';
 
 //basically to remove the need of prop drilling, we use context api or reduxTk, to manage states gloablly.
 
@@ -47,8 +51,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setIsLoggedIn(true);
     }
   };
+
   const signup = async (name: string, email: string, password: string) => {};
-  const logout = async () => {};
+
+  const logout = async () => {
+    await logoutUser();
+    setIsLoggedIn(false);
+    setUSer(null);
+    window.location.reload();
+  };
 
   const value = {
     user,

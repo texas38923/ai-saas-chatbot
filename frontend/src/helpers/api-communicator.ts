@@ -64,3 +64,16 @@ export const deleteUserChats = async () => {
   const data = await res.data;
   return data;
 };
+
+export const logoutUser = async () => {
+  //send a post request to the backend:
+  const res = await axios.get('/user/logout');
+
+  //if not OK:
+  if (res.status !== 200) {
+    throw new Error('Unable to logout user..');
+  }
+
+  const data = await res.data;
+  return data;
+};

@@ -3,14 +3,14 @@ import { useAuth } from '../context/AuthContext';
 import { red } from '@mui/material/colors';
 import ChatItem from '../components/chat/ChatItem';
 import { IoMdSend } from 'react-icons/io';
-import { useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import {
   deleteUserChats,
   getUserChats,
   sendChatRequest,
 } from '../helpers/api-communicator';
-import { ImFlag } from 'react-icons/im';
 import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 //type def for message:
 type Message = {
@@ -21,6 +21,7 @@ type Message = {
 const Chat = () => {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const auth = useAuth();
+  const navigate = useNavigate();
   const [chatMessages, setChatMessages] = useState<Message[]>([]);
 
   //to get the input message on clicking the send btn:
@@ -61,6 +62,12 @@ const Chat = () => {
           console.log(err);
           toast.error('Loading Chats Failed..', { id: 'loadchats' });
         });
+    }
+  }, [auth]);
+
+  useEffect(() => {
+    if (!auth?.user) {
+      return navigate('/login');
     }
   }, [auth]);
 

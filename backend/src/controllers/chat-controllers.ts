@@ -45,3 +45,59 @@ export const generateChatCompletion = async (
     return res.status(500).json({ message: 'openai server error..' });
   }
 };
+
+export const sendChatsToUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    //get the user from local variables:
+    const user = await User.findById(res.locals.jwtData.id);
+    if (!user) {
+      return res
+        .status(401)
+        .send('User not registered or Token Malfunctioned..');
+    }
+
+    //user token check:
+    if (user._id.toString() !== res.locals.jwtData.id) {
+      return res.status(401).send("Credentials didn't match..");
+    }
+
+    return res.status(200).json({ message: 'OK', chats: user.chats });
+  } catch (error) {
+    console.log(error);
+    return res.status(200).json({ message: 'ERROR', cause: error.message });
+  }
+};
+
+export const deleteChats = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    //get the user from local variables:
+    const user = await User.findById(res.locals.jwtData.id);
+    if (!user) {
+      return res
+        .status(401)
+        .send('User not registered or Token Malfunctioned..');
+    }
+
+    //user token check:
+    if (user._id.toString() !== res.locals.jwtData.id) {
+      return res.status(401).send("Credentials didn't match..");
+    }
+
+    //@ts-ignore
+    user.chats = [];
+    await user.save();
+
+    return res.status(200).json({ message: 'OK' });
+  } catch (error) {
+    console.log(error);
+    return res.status(200).json({ message: 'ERROR', cause: error.message });
+  }
+};

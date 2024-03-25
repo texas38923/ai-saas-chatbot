@@ -3,8 +3,14 @@ import { useAuth } from '../context/AuthContext';
 import { red } from '@mui/material/colors';
 import ChatItem from '../components/chat/ChatItem';
 import { IoMdSend } from 'react-icons/io';
-import { useRef, useState } from 'react';
-import { sendChatRequest } from '../helpers/api-communicator';
+import { useLayoutEffect, useRef, useState } from 'react';
+import {
+  deleteUserChats,
+  getUserChats,
+  sendChatRequest,
+} from '../helpers/api-communicator';
+import { ImFlag } from 'react-icons/im';
+import toast from 'react-hot-toast';
 
 //type def for message:
 type Message = {
@@ -28,6 +34,35 @@ const Chat = () => {
     const chatData = await sendChatRequest(content);
     setChatMessages([...chatData.chats]);
   };
+
+  //clear chats functionality:
+  const handleDeleteChats = async () => {
+    try {
+      toast.loading('Deleting chats...', { id: 'deletechats' });
+      await deleteUserChats();
+      setChatMessages([]);
+      toast.success('Deleted Chats Successfully!', { id: 'deletechats' });
+    } catch (error) {
+      console.log(error);
+      toast.error('Chat Deletion Failed..', { id: 'deletechats' });
+    }
+  };
+
+  //renders only on the loading on ui:
+  useLayoutEffect(() => {
+    if (auth?.isLoggedIn && auth.user) {
+      toast.loading('Loading Chats..', { id: 'loadchats' });
+      getUserChats()
+        .then((data) => {
+          setChatMessages([...data.chats]);
+          toast.success('Successfully loaded chats!', { id: 'loadchats' });
+        })
+        .catch((err) => {
+          console.log(err);
+          toast.error('Loading Chats Failed..', { id: 'loadchats' });
+        });
+    }
+  }, [auth]);
 
   return (
     <Box
@@ -86,6 +121,7 @@ const Chat = () => {
             information..
           </Typography>
           <Button
+            onClick={handleDeleteChats}
             sx={{
               width: '200px',
               my: 'auto',

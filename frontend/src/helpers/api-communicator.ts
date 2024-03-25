@@ -38,3 +38,29 @@ export const sendChatRequest = async (message: string) => {
   const data = await res.data;
   return data;
 };
+
+export const getUserChats = async () => {
+  //send a post request to the backend:
+  const res = await axios.post('/chat/all-chats');
+
+  //if not OK:
+  if (res.status !== 200) {
+    throw new Error('Unable to retreive old chats..');
+  }
+
+  const data = await res.data;
+  return data;
+};
+
+export const deleteUserChats = async () => {
+  //send a post request to the backend:
+  const res = await axios.delete('/chat/delete');
+
+  //if not OK:
+  if (res.status !== 200) {
+    throw new Error('Unable to delete chats..');
+  }
+
+  const data = await res.data;
+  return data;
+};

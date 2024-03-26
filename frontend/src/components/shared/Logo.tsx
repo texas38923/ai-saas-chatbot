@@ -1,5 +1,4 @@
 import { Typography } from '@mui/material';
-import React from 'react';
 import { Link } from 'react-router-dom';
 
 const Logo = () => {
@@ -29,7 +28,7 @@ const Logo = () => {
           textShadow: '2px 2px 20px #000',
         }}
       >
-        <span style={{ fontSize: '20px' }}>MERN</span>-GPT
+        <span style={{ fontSize: '20px' }}>MERNergetic</span>-Chatter✨
       </Typography>
     </div>
   );
